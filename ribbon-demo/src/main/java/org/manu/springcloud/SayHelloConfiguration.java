@@ -8,20 +8,17 @@ import com.netflix.loadbalancer.PingUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 
-public class SimpleServiceConfiguration {
-
+public class SayHelloConfiguration {
     @Autowired
     IClientConfig ribbonClientConfig;
 
-    // how the client is going to ping the diffent instances the ribbon will be load balancing.
     @Bean
     public IPing ribbonPing(IClientConfig config) {
         return new PingUrl();
     }
 
-    @Bean // defines the load balancing rules.
+    @Bean
     public IRule ribbonRule(IClientConfig config) {
         return new AvailabilityFilteringRule();
     }
-
 }

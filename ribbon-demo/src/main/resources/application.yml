@@ -1,4 +1,4 @@
-simple-service-2:
+say-hello:
   ribbon:
     eureka:
       enabled: false

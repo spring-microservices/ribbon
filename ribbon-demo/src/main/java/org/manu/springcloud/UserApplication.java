@@ -7,31 +7,30 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-@RestController
-@RibbonClient(name = "simple-service-2", configuration = SimpleServiceConfiguration.class)
 @SpringBootApplication
-public class RibbonApplication {
-
-    @Bean
+@RestController
+@RibbonClient(name = "say-hello", configuration = SayHelloConfiguration.class)
+public class UserApplication {
     @LoadBalanced
-    public RestTemplate restTemplate() {
+    @Bean
+    RestTemplate restTemplate() {
         return new RestTemplate();
     }
 
     @Autowired
-    private RestTemplate restTemplate;
+    RestTemplate restTemplate;
 
-
-    @RequestMapping("/startClient")
-    public String startClient() {
-        return restTemplate.getForObject("http://simple-service-2/execute", String.class);
+    @RequestMapping("/hi")
+    public String hi(@RequestParam(value = "name", defaultValue = "Artaban") String name) {
+        String greeting = this.restTemplate.getForObject("http://say-hello/greeting", String.class);
+        return String.format("%s, %s!", greeting, name);
     }
 
-
     public static void main(String[] args) {
-        SpringApplication.run(RibbonApplication.class, args);
+        SpringApplication.run(UserApplication.class, args);
     }
 }
